@@ -1,0 +1,15 @@
+services:
+  random-decision-maker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: "host"
+    environment:
+      - RESULTS_FILE=/results/Decisions.csv
+      - API_HOST=localhost:8080
+      - CONF_PARAM=EncodingThreadCount
+      - RANGE_MIN=1
+      - RANGE_MAX=8
+      - SLEEP_INTERVAL=300 # 5 minutes
+    volumes:
+      - ./results:/results

@@ -1,0 +1,7 @@
+inputSpec: ../ServiceAPI/ServiceAPIExample.yml
+outputDir: .
+generatorName: bash
+enumUnknownDefaultCase: true
+generateBashCompletion: true
+generateZshCompletion: true
+scriptName: serviceapi
