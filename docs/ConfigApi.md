@@ -5,9 +5,8 @@ All URIs are relative to */v0*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**configChange**](ConfigApi.md#configChange) | **PUT** /config/{confParam} | Change parameter.
-[**configDescribe**](ConfigApi.md#configDescribe) | **GET** /config/{confParam}/description | Describe configurable parameter.
-[**configDiscover**](ConfigApi.md#configDiscover) | **GET** /config | Discover configuration.
-[**configValue**](ConfigApi.md#configValue) | **GET** /config/{confParam} | Parameter value.
+[**configDiscover**](ConfigApi.md#configDiscover) | **GET** /config | Discover, describe, and gather configuration.
+[**configGet**](ConfigApi.md#configGet) | **GET** /config/{confParam} | Parameter value.
 
 
 
@@ -29,7 +28,7 @@ serviceapi configChange confParam=value
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **confParam** | **string** | Name of the parameter to describe | [default to null]
- **confParamValue** | [**ConfParamValue**](ConfParamValue.md) |  | [optional]
+ **confParamChange** | [**ConfParamChange**](ConfParamChange.md) |  | [optional]
 
 ### Return type
 
@@ -47,46 +46,11 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## configDescribe
-
-Describe configurable parameter.
-
-Returns the description of the requested parameter.
-
-### Example
-
-```bash
-serviceapi configDescribe confParam=value
-```
-
-### Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **confParam** | **string** | Name of the parameter to describe | [default to null]
-
-### Return type
-
-[**ConfParam**](ConfParam.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not Applicable
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-
 ## configDiscover
 
-Discover configuration.
+Discover, describe, and gather configuration.
 
-Returns the list of configurable service parameters.
+Returns the list of configurable service parameters with their definitions and current values.
 
 ### Example
 
@@ -100,7 +64,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**array[string]**
+[**array[ConfParam]**](ConfParam.md)
 
 ### Authorization
 
@@ -114,16 +78,16 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## configValue
+## configGet
 
 Parameter value.
 
-Returns the current value of the requested parameter.
+Returns the description and current value of the requested parameter.
 
 ### Example
 
 ```bash
-serviceapi configValue confParam=value
+serviceapi configGet confParam=value
 ```
 
 ### Parameters
@@ -135,7 +99,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ConfParamValue**](ConfParamValue.md)
+[**ConfParam**](ConfParam.md)
 
 ### Authorization
 

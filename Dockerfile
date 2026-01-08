@@ -58,11 +58,11 @@ but you can switch to Bash, where basic autocompletion is also supported.\n\
 # Adding the random decisions script
 
 ENV RESULTS_FILE=/results/Decisions.csv
-ENV API_HOST=localhost:8080
+ENV API_HOST=http://localhost:8080
 ENV CONF_PARAM=EncodingThreadCount
 ENV RANGE_MIN=1
-ENV RANGE_MAX=8
-ENV SLEEP_INTERVAL=5
+ENV RANGE_MAX=16
+ENV SLEEP_INTERVAL=180
 
 COPY take_random_decisions.sh /usr/bin/random_decisions
 RUN chmod +x /usr/bin/random_decisions
@@ -73,8 +73,6 @@ RUN chmod +x /usr/bin/random_decisions
 
 RUN sed -i 's/root:x:0:0:root:\/root:\/bin\/ash/root:x:0:0:root:\/root:\/bin\/zsh/' /etc/passwd
 RUN apk del git vim && rm -f /var/cache/apk/*
-
-
 
 ENTRYPOINT ["/bin/zsh"]
 CMD ["/usr/bin/random_decisions"]

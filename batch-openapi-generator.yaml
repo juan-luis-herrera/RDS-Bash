@@ -1,4 +1,4 @@
-inputSpec: ../ServiceAPI/ServiceAPIExample.yml
+inputSpec: ../ServiceAPI/ServiceAPI-OpenAPI.yaml
 outputDir: .
 generatorName: bash
 enumUnknownDefaultCase: true

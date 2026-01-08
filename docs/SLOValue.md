@@ -1,4 +1,4 @@
-# SLOValue
+# SLO_value
 
 ## Properties
 Name | Type | Description | Notes

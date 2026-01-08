@@ -134,30 +134,26 @@ All URIs are relative to */v0*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ConfigApi* | [**configChange**](docs/ConfigApi.md#configchange) | **PUT** /config/{confParam} | Change parameter.
-*ConfigApi* | [**configDescribe**](docs/ConfigApi.md#configdescribe) | **GET** /config/{confParam}/description | Describe configurable parameter.
-*ConfigApi* | [**configDiscover**](docs/ConfigApi.md#configdiscover) | **GET** /config | Discover configuration.
-*ConfigApi* | [**configValue**](docs/ConfigApi.md#configvalue) | **GET** /config/{confParam} | Parameter value.
-*SloApi* | [**sloDescribe**](docs/SloApi.md#slodescribe) | **GET** /slos/{sloId}/description | Describe SLO.
-*SloApi* | [**sloDiscover**](docs/SloApi.md#slodiscover) | **GET** /slos | Discover SLOs.
-*SloApi* | [**sloValue**](docs/SloApi.md#slovalue) | **GET** /slos/{sloId} | SLO value.
+*ConfigApi* | [**configDiscover**](docs/ConfigApi.md#configdiscover) | **GET** /config | Discover, describe, and gather configuration.
+*ConfigApi* | [**configGet**](docs/ConfigApi.md#configget) | **GET** /config/{confParam} | Parameter value.
+*SloApi* | [**sloDiscover**](docs/SloApi.md#slodiscover) | **GET** /slos | Discover, describe, and gather values of SLOs.
+*SloApi* | [**sloGet**](docs/SloApi.md#sloget) | **GET** /slos/{sloId} | Describe and gather value of an SLO.
 
 
 ## Documentation For Models
 
  - [ConfParam](docs/ConfParam.md)
+ - [ConfParamChange](docs/ConfParamChange.md)
  - [ConfParamDescription](docs/ConfParamDescription.md)
+ - [ConfParamDescriptionValueListInner](docs/ConfParamDescriptionValueListInner.md)
  - [ConfParamType](docs/ConfParamType.md)
  - [ConfParamValue](docs/ConfParamValue.md)
- - [DateRangeConfParam](docs/DateRangeConfParam.md)
- - [DateRangeSLO](docs/DateRangeSLO.md)
- - [DateTimeRangeConfParam](docs/DateTimeRangeConfParam.md)
- - [DateTimeRangeSLO](docs/DateTimeRangeSLO.md)
- - [IntegerRangeConfParam](docs/IntegerRangeConfParam.md)
- - [IntegerRangeSLO](docs/IntegerRangeSLO.md)
- - [RangeConfParam](docs/RangeConfParam.md)
- - [RangeSLO](docs/RangeSLO.md)
  - [SLO](docs/SLO.md)
  - [SLODescription](docs/SLODescription.md)
+ - [SLODescriptionMaxRange](docs/SLODescriptionMaxRange.md)
+ - [SLODescriptionMaxValue](docs/SLODescriptionMaxValue.md)
+ - [SLODescriptionMinValue](docs/SLODescriptionMinValue.md)
+ - [SLODescriptionTarget](docs/SLODescriptionTarget.md)
  - [SLOType](docs/SLOType.md)
  - [SLOValue](docs/SLOValue.md)
 

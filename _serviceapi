@@ -10,7 +10,7 @@
 # !
 # ! Based on: https://github.com/Valodim/zsh-curl-completion/blob/master/_curl
 # !
-# ! Generator version: 7.16.0
+# ! Generator version: 7.18.0
 # !
 # !
 # ! Installation:
@@ -298,11 +298,9 @@ case $state in
     # Operations
     _values "Operations" \
             "configChange[Change parameter.]" \
-            "configDescribe[Describe configurable parameter.]" \
-            "configDiscover[Discover configuration.]" \
-            "configValue[Parameter value.]"             "sloDescribe[Describe SLO.]" \
-            "sloDiscover[Discover SLOs.]" \
-            "sloValue[SLO value.]" \
+            "configDiscover[Discover, describe, and gather configuration.]" \
+            "configGet[Parameter value.]"             "sloDiscover[Discover, describe, and gather values of SLOs.]" \
+            "sloGet[Describe and gather value of an SLO.]" \
 
     _arguments "(--help)--help[Print information about operation]"
 
@@ -317,30 +315,16 @@ case $state in
                     )
         _describe -t actions 'operations' _op_arguments -S '' && ret=0
         ;;
-      configDescribe)
-        local -a _op_arguments
-        _op_arguments=(
-          "confParam=:[PATH] Name of the parameter to describe"
-                    )
-        _describe -t actions 'operations' _op_arguments -S '' && ret=0
-        ;;
       configDiscover)
         local -a _op_arguments
         _op_arguments=(
                               )
         _describe -t actions 'operations' _op_arguments -S '' && ret=0
         ;;
-      configValue)
+      configGet)
         local -a _op_arguments
         _op_arguments=(
           "confParam=:[PATH] Name of the parameter to describe"
-                    )
-        _describe -t actions 'operations' _op_arguments -S '' && ret=0
-        ;;
-      sloDescribe)
-        local -a _op_arguments
-        _op_arguments=(
-          "sloId=:[PATH] ID of SLO to describe"
                     )
         _describe -t actions 'operations' _op_arguments -S '' && ret=0
         ;;
@@ -350,7 +334,7 @@ case $state in
                               )
         _describe -t actions 'operations' _op_arguments -S '' && ret=0
         ;;
-      sloValue)
+      sloGet)
         local -a _op_arguments
         _op_arguments=(
           "sloId=:[PATH] ID of SLO to describe"

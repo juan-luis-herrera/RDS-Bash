@@ -8,7 +8,7 @@
 # ! openapi-generator (https://openapi-generator.tech)
 # ! FROM OPENAPI SPECIFICATION IN JSON.
 # !
-# ! Generator version: 7.16.0
+# ! Generator version: 7.18.0
 # !
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -97,11 +97,9 @@ declare -a result_color_table=( "$WHITE" "$WHITE" "$GREEN" "$YELLOW" "$WHITE" "$
 # 1 - required
 declare -A operation_parameters_minimum_occurrences
 operation_parameters_minimum_occurrences["configChange:::confParam"]=1
-operation_parameters_minimum_occurrences["configChange:::ConfParamValue"]=0
-operation_parameters_minimum_occurrences["configDescribe:::confParam"]=1
-operation_parameters_minimum_occurrences["configValue:::confParam"]=1
-operation_parameters_minimum_occurrences["sloDescribe:::sloId"]=1
-operation_parameters_minimum_occurrences["sloValue:::sloId"]=1
+operation_parameters_minimum_occurrences["configChange:::ConfParamChange"]=0
+operation_parameters_minimum_occurrences["configGet:::confParam"]=1
+operation_parameters_minimum_occurrences["sloGet:::sloId"]=1
 
 ##
 # This array stores the maximum number of allowed occurrences for parameter
@@ -111,22 +109,18 @@ operation_parameters_minimum_occurrences["sloValue:::sloId"]=1
 # 0 - unlimited
 declare -A operation_parameters_maximum_occurrences
 operation_parameters_maximum_occurrences["configChange:::confParam"]=0
-operation_parameters_maximum_occurrences["configChange:::ConfParamValue"]=0
-operation_parameters_maximum_occurrences["configDescribe:::confParam"]=0
-operation_parameters_maximum_occurrences["configValue:::confParam"]=0
-operation_parameters_maximum_occurrences["sloDescribe:::sloId"]=0
-operation_parameters_maximum_occurrences["sloValue:::sloId"]=0
+operation_parameters_maximum_occurrences["configChange:::ConfParamChange"]=0
+operation_parameters_maximum_occurrences["configGet:::confParam"]=0
+operation_parameters_maximum_occurrences["sloGet:::sloId"]=0
 
 ##
 # The type of collection for specifying multiple values for parameter:
 # - multi, csv, ssv, tsv
 declare -A operation_parameters_collection_type
 operation_parameters_collection_type["configChange:::confParam"]=""
-operation_parameters_collection_type["configChange:::ConfParamValue"]=""
-operation_parameters_collection_type["configDescribe:::confParam"]=""
-operation_parameters_collection_type["configValue:::confParam"]=""
-operation_parameters_collection_type["sloDescribe:::sloId"]=""
-operation_parameters_collection_type["sloValue:::sloId"]=""
+operation_parameters_collection_type["configChange:::ConfParamChange"]=""
+operation_parameters_collection_type["configGet:::confParam"]=""
+operation_parameters_collection_type["sloGet:::sloId"]=""
 
 
 ##
@@ -484,7 +478,7 @@ build_request_path() {
 print_help() {
 cat <<EOF
 
-${BOLD}${WHITE}Service API command line client (API version research-0.1)${OFF}
+${BOLD}${WHITE}Service API command line client (API version research-0.3)${OFF}
 
 ${BOLD}${WHITE}Usage${OFF}
 
@@ -516,17 +510,15 @@ EOF
     echo -e "${BOLD}${WHITE}[config]${OFF}"
 read -r -d '' ops <<EOF
   ${CYAN}configChange${OFF};Change parameter.
-  ${CYAN}configDescribe${OFF};Describe configurable parameter.
-  ${CYAN}configDiscover${OFF};Discover configuration.
-  ${CYAN}configValue${OFF};Parameter value.
+  ${CYAN}configDiscover${OFF};Discover, describe, and gather configuration.
+  ${CYAN}configGet${OFF};Parameter value.
 EOF
 echo "  $ops" | column -t -s ';'
     echo ""
     echo -e "${BOLD}${WHITE}[slo]${OFF}"
 read -r -d '' ops <<EOF
-  ${CYAN}sloDescribe${OFF};Describe SLO.
-  ${CYAN}sloDiscover${OFF};Discover SLOs.
-  ${CYAN}sloValue${OFF};SLO value.
+  ${CYAN}sloDiscover${OFF};Discover, describe, and gather values of SLOs.
+  ${CYAN}sloGet${OFF};Describe and gather value of an SLO.
 EOF
 echo "  $ops" | column -t -s ';'
     echo ""
@@ -535,7 +527,7 @@ echo "  $ops" | column -t -s ';'
     echo -e "  -V,--version\\t\\t\\t\\tPrint API version"
     echo -e "  --about\\t\\t\\t\\tPrint the information about service"
     echo -e "  --host ${CYAN}<url>${OFF}\\t\\t\\t\\tSpecify the host URL "
-echo -e "              \\t\\t\\t\\t(e.g. 'https://apitest')"
+echo -e "              \\t\\t\\t\\t(e.g. 'https://localhost')"
 
     echo -e "  --force\\t\\t\\t\\tForce command invocation in spite of missing"
     echo -e "         \\t\\t\\t\\trequired parameters or wrong content type"
@@ -556,7 +548,7 @@ echo -e "              \\t\\t\\t\\t(e.g. 'https://apitest')"
 ##############################################################################
 print_about() {
     echo ""
-    echo -e "${BOLD}${WHITE}Service API command line client (API version research-0.1)${OFF}"
+    echo -e "${BOLD}${WHITE}Service API command line client (API version research-0.3)${OFF}"
     echo ""
     echo -e "License: "
     echo -e "Contact: "
@@ -576,7 +568,7 @@ echo "$appdescription" | paste -sd' ' - | fold -sw 80
 ##############################################################################
 print_version() {
     echo ""
-    echo -e "${BOLD}Service API command line client (API version research-0.1)${OFF}"
+    echo -e "${BOLD}Service API command line client (API version research-0.3)${OFF}"
     echo ""
 }
 
@@ -606,34 +598,14 @@ print_configChange_help() {
 }
 ##############################################################################
 #
-# Print help for configDescribe operation
-#
-##############################################################################
-print_configDescribe_help() {
-    echo ""
-    echo -e "${BOLD}${WHITE}configDescribe - Describe configurable parameter.${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
-    echo -e ""
-    echo -e "Returns the description of the requested parameter." | paste -sd' ' - | fold -sw 80
-    echo -e ""
-    echo -e "${BOLD}${WHITE}Parameters${OFF}"
-    echo -e "  * ${GREEN}confParam${OFF} ${BLUE}[string]${OFF} ${RED}(required)${OFF} ${CYAN}(default: null)${OFF} - Name of the parameter to describe ${YELLOW}Specify as: confParam=value${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
-    echo ""
-    echo -e "${BOLD}${WHITE}Responses${OFF}"
-    code=200
-    echo -e "${result_color_table[${code:0:1}]}  200;successful operation${OFF}" | paste -sd' ' - | column -t -s ';' | fold -sw 80 | sed '2,$s/^/       /'
-    code=404
-    echo -e "${result_color_table[${code:0:1}]}  404;The requested parameter does not exist${OFF}" | paste -sd' ' - | column -t -s ';' | fold -sw 80 | sed '2,$s/^/       /'
-}
-##############################################################################
-#
 # Print help for configDiscover operation
 #
 ##############################################################################
 print_configDiscover_help() {
     echo ""
-    echo -e "${BOLD}${WHITE}configDiscover - Discover configuration.${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
+    echo -e "${BOLD}${WHITE}configDiscover - Discover, describe, and gather configuration.${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
     echo -e ""
-    echo -e "Returns the list of configurable service parameters." | paste -sd' ' - | fold -sw 80
+    echo -e "Returns the list of configurable service parameters with their definitions and current values." | paste -sd' ' - | fold -sw 80
     echo -e ""
     echo ""
     echo -e "${BOLD}${WHITE}Responses${OFF}"
@@ -644,14 +616,14 @@ print_configDiscover_help() {
 }
 ##############################################################################
 #
-# Print help for configValue operation
+# Print help for configGet operation
 #
 ##############################################################################
-print_configValue_help() {
+print_configGet_help() {
     echo ""
-    echo -e "${BOLD}${WHITE}configValue - Parameter value.${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
+    echo -e "${BOLD}${WHITE}configGet - Parameter value.${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
     echo -e ""
-    echo -e "Returns the current value of the requested parameter." | paste -sd' ' - | fold -sw 80
+    echo -e "Returns the description and current value of the requested parameter." | paste -sd' ' - | fold -sw 80
     echo -e ""
     echo -e "${BOLD}${WHITE}Parameters${OFF}"
     echo -e "  * ${GREEN}confParam${OFF} ${BLUE}[string]${OFF} ${RED}(required)${OFF} ${CYAN}(default: null)${OFF} - Name of the parameter to describe ${YELLOW}Specify as: confParam=value${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
@@ -664,34 +636,14 @@ print_configValue_help() {
 }
 ##############################################################################
 #
-# Print help for sloDescribe operation
-#
-##############################################################################
-print_sloDescribe_help() {
-    echo ""
-    echo -e "${BOLD}${WHITE}sloDescribe - Describe SLO.${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
-    echo -e ""
-    echo -e "Returns the description of the requested SLO." | paste -sd' ' - | fold -sw 80
-    echo -e ""
-    echo -e "${BOLD}${WHITE}Parameters${OFF}"
-    echo -e "  * ${GREEN}sloId${OFF} ${BLUE}[string]${OFF} ${RED}(required)${OFF} ${CYAN}(default: null)${OFF} - ID of SLO to describe ${YELLOW}Specify as: sloId=value${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
-    echo ""
-    echo -e "${BOLD}${WHITE}Responses${OFF}"
-    code=200
-    echo -e "${result_color_table[${code:0:1}]}  200;successful operation${OFF}" | paste -sd' ' - | column -t -s ';' | fold -sw 80 | sed '2,$s/^/       /'
-    code=404
-    echo -e "${result_color_table[${code:0:1}]}  404;The requested SLO does not exist${OFF}" | paste -sd' ' - | column -t -s ';' | fold -sw 80 | sed '2,$s/^/       /'
-}
-##############################################################################
-#
 # Print help for sloDiscover operation
 #
 ##############################################################################
 print_sloDiscover_help() {
     echo ""
-    echo -e "${BOLD}${WHITE}sloDiscover - Discover SLOs.${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
+    echo -e "${BOLD}${WHITE}sloDiscover - Discover, describe, and gather values of SLOs.${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
     echo -e ""
-    echo -e "Returns the list of declared SLOs of the service." | paste -sd' ' - | fold -sw 80
+    echo -e "Returns the list of declared SLOs of the service with their definitions and current values" | paste -sd' ' - | fold -sw 80
     echo -e ""
     echo ""
     echo -e "${BOLD}${WHITE}Responses${OFF}"
@@ -702,14 +654,14 @@ print_sloDiscover_help() {
 }
 ##############################################################################
 #
-# Print help for sloValue operation
+# Print help for sloGet operation
 #
 ##############################################################################
-print_sloValue_help() {
+print_sloGet_help() {
     echo ""
-    echo -e "${BOLD}${WHITE}sloValue - SLO value.${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
+    echo -e "${BOLD}${WHITE}sloGet - Describe and gather value of an SLO.${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
     echo -e ""
-    echo -e "Returns the current value of the requested SLO." | paste -sd' ' - | fold -sw 80
+    echo -e "Returns the description and current value of the requested SLO." | paste -sd' ' - | fold -sw 80
     echo -e ""
     echo -e "${BOLD}${WHITE}Parameters${OFF}"
     echo -e "  * ${GREEN}sloId${OFF} ${BLUE}[string]${OFF} ${RED}(required)${OFF} ${CYAN}(default: null)${OFF} - ID of SLO to describe ${YELLOW}Specify as: sloId=value${OFF}" | paste -sd' ' - | fold -sw 80 | sed '2,$s/^/    /'
@@ -802,42 +754,6 @@ call_configChange() {
 
 ##############################################################################
 #
-# Call configDescribe operation
-#
-##############################################################################
-call_configDescribe() {
-    # ignore error about 'path_parameter_names' being unused; passed by reference
-    # shellcheck disable=SC2034
-    local path_parameter_names=(confParam)
-    # ignore error about 'query_parameter_names' being unused; passed by reference
-    # shellcheck disable=SC2034
-    local query_parameter_names=()
-    local path
-
-    if ! path=$(build_request_path "/v0/config/{confParam}/description" path_parameter_names query_parameter_names); then
-        ERROR_MSG=$path
-        exit 1
-    fi
-    local method="GET"
-    local headers_curl
-    headers_curl=$(header_arguments_to_curl)
-    if [[ -n $header_accept ]]; then
-        headers_curl="${headers_curl} -H 'Accept: ${header_accept}'"
-    fi
-
-    local basic_auth_option=""
-    if [[ -n $basic_auth_credential ]]; then
-        basic_auth_option="-u ${basic_auth_credential}"
-    fi
-    if [[ "$print_curl" = true ]]; then
-        echo "curl -d '' ${basic_auth_option} ${curl_arguments} ${headers_curl} -X ${method} \"${host}${path}\""
-    else
-        eval "curl -d '' ${basic_auth_option} ${curl_arguments} ${headers_curl} -X ${method} \"${host}${path}\""
-    fi
-}
-
-##############################################################################
-#
 # Call configDiscover operation
 #
 ##############################################################################
@@ -874,10 +790,10 @@ call_configDiscover() {
 
 ##############################################################################
 #
-# Call configValue operation
+# Call configGet operation
 #
 ##############################################################################
-call_configValue() {
+call_configGet() {
     # ignore error about 'path_parameter_names' being unused; passed by reference
     # shellcheck disable=SC2034
     local path_parameter_names=(confParam)
@@ -887,42 +803,6 @@ call_configValue() {
     local path
 
     if ! path=$(build_request_path "/v0/config/{confParam}" path_parameter_names query_parameter_names); then
-        ERROR_MSG=$path
-        exit 1
-    fi
-    local method="GET"
-    local headers_curl
-    headers_curl=$(header_arguments_to_curl)
-    if [[ -n $header_accept ]]; then
-        headers_curl="${headers_curl} -H 'Accept: ${header_accept}'"
-    fi
-
-    local basic_auth_option=""
-    if [[ -n $basic_auth_credential ]]; then
-        basic_auth_option="-u ${basic_auth_credential}"
-    fi
-    if [[ "$print_curl" = true ]]; then
-        echo "curl -d '' ${basic_auth_option} ${curl_arguments} ${headers_curl} -X ${method} \"${host}${path}\""
-    else
-        eval "curl -d '' ${basic_auth_option} ${curl_arguments} ${headers_curl} -X ${method} \"${host}${path}\""
-    fi
-}
-
-##############################################################################
-#
-# Call sloDescribe operation
-#
-##############################################################################
-call_sloDescribe() {
-    # ignore error about 'path_parameter_names' being unused; passed by reference
-    # shellcheck disable=SC2034
-    local path_parameter_names=(sloId)
-    # ignore error about 'query_parameter_names' being unused; passed by reference
-    # shellcheck disable=SC2034
-    local query_parameter_names=()
-    local path
-
-    if ! path=$(build_request_path "/v0/slos/{sloId}/description" path_parameter_names query_parameter_names); then
         ERROR_MSG=$path
         exit 1
     fi
@@ -982,10 +862,10 @@ call_sloDiscover() {
 
 ##############################################################################
 #
-# Call sloValue operation
+# Call sloGet operation
 #
 ##############################################################################
-call_sloValue() {
+call_sloGet() {
     # ignore error about 'path_parameter_names' being unused; passed by reference
     # shellcheck disable=SC2034
     local path_parameter_names=(sloId)
@@ -1116,23 +996,17 @@ case $key in
     configChange)
     operation="configChange"
     ;;
-    configDescribe)
-    operation="configDescribe"
-    ;;
     configDiscover)
     operation="configDiscover"
     ;;
-    configValue)
-    operation="configValue"
-    ;;
-    sloDescribe)
-    operation="sloDescribe"
+    configGet)
+    operation="configGet"
     ;;
     sloDiscover)
     operation="sloDiscover"
     ;;
-    sloValue)
-    operation="sloValue"
+    sloGet)
+    operation="sloGet"
     ;;
     *==*)
     # Parse body arguments and convert them into top level
@@ -1224,23 +1098,17 @@ case $operation in
     configChange)
     call_configChange
     ;;
-    configDescribe)
-    call_configDescribe
-    ;;
     configDiscover)
     call_configDiscover
     ;;
-    configValue)
-    call_configValue
-    ;;
-    sloDescribe)
-    call_sloDescribe
+    configGet)
+    call_configGet
     ;;
     sloDiscover)
     call_sloDiscover
     ;;
-    sloValue)
-    call_sloValue
+    sloGet)
+    call_sloGet
     ;;
     *)
     ERROR_MSG="ERROR: Unknown operation: $operation"

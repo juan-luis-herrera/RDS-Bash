@@ -1,4 +1,4 @@
-# ConfParamValue
+# ConfParam_value
 
 ## Properties
 Name | Type | Description | Notes
