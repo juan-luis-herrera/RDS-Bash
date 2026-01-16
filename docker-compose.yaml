@@ -7,9 +7,11 @@ services:
     environment:
       - RESULTS_FILE=/results/Decisions.csv
       - API_HOST=http://localhost:8080
-      - CONF_PARAM=EncodingThreadCount
-      - RANGE_MIN=1
+      - CONF_PARAM=ServiceParam
+      - RANGE_MIN=0
       - RANGE_MAX=16
-      - SLEEP_INTERVAL=180 # 5 minutes
+      - SLEEP_INTERVAL=120 # 2 minutes
+      - NUM_STEPS=120
+      - NTFY_REPORT=https://ntfy.sh/casca-random
     volumes:
       - ./results:/results
