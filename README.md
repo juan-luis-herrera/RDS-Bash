@@ -1,6 +1,6 @@
 # Service API Bash client and random decision agent
 
-[![DOI](https://zenodo.org/badge/1028413171.svg)](https://doi.org/10.5281/zenodo.18622181)
+[![DOI](https://zenodo.org/badge/1071394075.svg)](https://doi.org/10.5281/zenodo.18622215)
 
 
 ## What is in this repository?
