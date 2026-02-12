@@ -1,5 +1,8 @@
 # Service API Bash client and random decision agent
 
+[![DOI](https://zenodo.org/badge/1028413171.svg)](https://doi.org/10.5281/zenodo.18622181)
+
+
 ## What is in this repository?
 
 This repository contains the OpenAPI-generated client for the service API in Bash. It is bundled with a script and a Dockerfile to make it take random decisions over a given configuration parameter in a certain range.
